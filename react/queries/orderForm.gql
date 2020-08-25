@@ -1,0 +1,50 @@
+query {
+  orderForm @context(provider: "vtex.store-graphql") {
+    orderFormId
+    userType
+    loggedIn
+    allowManualPrice
+    clientProfileData {
+      email
+    }
+    customData {
+      customApps {
+        id
+        major
+        fields
+      }
+    }
+    salesChannel
+    totalizers {
+      id
+      name
+      value
+    }
+    value
+    items {
+      name
+      skuName
+      refId
+      id
+      productId
+      imageUrl
+      listPrice
+      price
+      quantity
+      sellingPrice
+    }
+    shippingData {
+      address {
+        street
+        number
+        complement
+        postalCode
+        city
+        geoCoordinates
+        neighborhood
+        country
+        state
+      }
+    }
+  }
+}

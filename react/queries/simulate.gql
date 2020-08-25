@@ -1,0 +1,24 @@
+query getSimulaltion(
+  $items: [ShippingItem]
+  $postalCode: String
+  $country: String
+) @context(provider: "vtex.store-graphql") {
+  shipping(items: $items, postalCode: $postalCode, country: $country) {
+    items {
+      availability
+    }
+    logisticsInfo {
+      selectedSla
+      slas {
+        name
+        price
+        shippingEstimate
+        friendlyName
+        deliveryIds {
+          courierName
+          quantity
+        }
+      }
+    }
+  }
+}
