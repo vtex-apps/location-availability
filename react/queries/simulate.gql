@@ -14,6 +14,24 @@ query getSimulaltion(
         price
         shippingEstimate
         friendlyName
+        pickupStoreInfo {
+          friendlyName
+          address {
+            addressType
+            receiverName
+            addressId
+            postalCode
+            city
+            state
+            country
+            street
+            number
+            neighborhood
+            complement
+            reference
+            geoCoordinates
+          }
+        }
         deliveryIds {
           courierName
           quantity

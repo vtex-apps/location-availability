@@ -14,6 +14,57 @@ const CheckAvailability: FC<any> = ({ orderForm }) => {
 
   const hasShipping = orderForm?.orderForm?.shippingData
 
+  const buildResponse = (item: any) => {
+    const [status] = item.items
+    const [logistics] = item.logisticsInfo
+    const { availability } = status
+    const { slas } = logistics
+
+    if (availability === 'withoutStock') return
+
+    const structured = slas
+      .sort((a: any, b: any) => {
+        const a1 = parseInt(a.shippingEstimate.replace(/\D/g, ''), 10)
+        const b1 = parseInt(b.shippingEstimate.replace(/\D/g, ''), 10)
+
+        return a1 < b1 ? -1 : a1 > b1 ? 1 : 0
+      })
+      .map((option: any) => {
+        return {
+          ...option,
+          isPickup: !!option.pickupStoreInfo.address,
+          storeName: option.pickupStoreInfo.friendlyName,
+          days: parseInt(option.shippingEstimate.replace(/\D/g, ''), 10),
+        }
+      })
+
+    return structured.map((option: any, i: number) => {
+      return (
+        <p
+          key={`slaInfo_${new Date().getTime()}_${i}`}
+          className={`ma0 ${
+            !i ? 'firstShippingOption' : ''
+          } slaInfo_position_${i} ${i > 1 ? 'dn' : ''}`}
+        >
+          {option.isPickup && (
+            <span className="pickUp">Pickup today at {option.storeName}</span>
+          )}
+          {!option.isPickup && !option.price && (
+            <span className="freeShipping">
+              FREE shipping: Get it{' '}
+              {option.days === 1 ? 'tomorrow' : `in ${option.days} days`}
+            </span>
+          )}
+          {!option.isPickup && option.price && (
+            <span className={option.days === 1 ? 'getTomorrow' : 'getInDays'}>
+              Get it {option.days === 1 ? 'tomorrow' : `in ${option.days} days`}
+            </span>
+          )}
+        </p>
+      )
+    })
+  }
+
   if (product && hasShipping && !called) {
     getSimulation({
       variables: {
@@ -30,12 +81,8 @@ const CheckAvailability: FC<any> = ({ orderForm }) => {
     })
   }
 
-  if (data?.shipping?.items) {
-    console.log('HAS =>', hasShipping.address.postalCode, data.shipping)
-  }
-
   return data?.shipping?.items && !loading ? (
-    <div> {data.shipping.items[0].availability}</div>
+    <div> {buildResponse(data.shipping)}</div>
   ) : null
 }
 
