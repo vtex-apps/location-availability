@@ -1,17 +1,21 @@
 /* eslint-disable no-console */
-import React, { FC, useContext } from 'react'
+import React, { FC } from 'react'
 import { injectIntl } from 'react-intl'
 import { useLazyQuery, graphql, compose } from 'react-apollo'
-import { ProductContext } from 'vtex.product-context'
+import useProduct from 'vtex.product-context/useProduct'
 
 import SIMULATE from './queries/simulate.gql'
 import ORDERFORM from './queries/orderForm.gql'
 
+const prev: any = {}
+
 const CheckAvailability: FC<any> = ({ orderForm }) => {
-  const { product } = useContext(ProductContext) as any
+  const [getSimulation, { data, loading }] = useLazyQuery(SIMULATE)
+  const skuSelector = useProduct()
 
-  const [getSimulation, { data, loading, called }] = useLazyQuery(SIMULATE)
+  if (!skuSelector || !orderForm) return null
 
+  const { selectedItem, product } = skuSelector
   const hasShipping = orderForm?.orderForm?.shippingData
 
   const buildResponse = (item: any) => {
@@ -21,6 +25,12 @@ const CheckAvailability: FC<any> = ({ orderForm }) => {
     const { slas } = logistics
 
     if (availability === 'withoutStock') return
+    if (availability === 'cannotBeDelivered')
+      return (
+        <p className="cannotBeDelivered">
+          Cannot be delivered to your location
+        </p>
+      )
 
     const structured = slas
       .sort((a: any, b: any) => {
@@ -65,20 +75,28 @@ const CheckAvailability: FC<any> = ({ orderForm }) => {
     })
   }
 
-  if (product && hasShipping && !called) {
-    getSimulation({
-      variables: {
-        items: [
-          {
-            id: product.sku.itemId,
-            seller: product.sku.seller.sellerId,
-            quantity: '1',
-          },
-        ],
-        postalCode: hasShipping.address.postalCode,
-        country: hasShipping.address.country,
-      },
-    })
+  if (selectedItem && hasShipping) {
+    const [seller] = selectedItem.sellers
+
+    if (
+      !prev[product.prodictId] ||
+      prev[product.prodictId] !== selectedItem.itemId
+    ) {
+      prev[product.prodictId] = selectedItem.itemId
+      getSimulation({
+        variables: {
+          items: [
+            {
+              id: selectedItem.itemId,
+              seller: seller.sellerId,
+              quantity: '1',
+            },
+          ],
+          postalCode: hasShipping.address.postalCode,
+          country: hasShipping.address.country,
+        },
+      })
+    }
   }
 
   return data?.shipping?.items && !loading ? (
