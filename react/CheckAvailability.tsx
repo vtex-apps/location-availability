@@ -6,11 +6,13 @@ import useProduct from 'vtex.product-context/useProduct'
 
 import SIMULATE from './queries/simulate.gql'
 import ORDERFORM from './queries/orderForm.gql'
+import styles from './styles.css'
 
 const prev: any = {}
 
 const CheckAvailability: FC<any> = ({ orderForm }) => {
   const [getSimulation, { data, loading }] = useLazyQuery(SIMULATE)
+
   const skuSelector = useProduct()
 
   if (!skuSelector || !orderForm) return null
@@ -27,8 +29,9 @@ const CheckAvailability: FC<any> = ({ orderForm }) => {
     if (availability === 'withoutStock') return
     if (availability === 'cannotBeDelivered')
       return (
-        <p className="cannotBeDelivered">
-          Cannot be delivered to your location
+        <p className={styles.cannotBeDelivered}>
+          <strong className={styles.cannotBeDeliveredBold}>Shipping:</strong>{' '}
+          Unavailable for {hasShipping.address.postalCode}
         </p>
       )
 
@@ -53,21 +56,29 @@ const CheckAvailability: FC<any> = ({ orderForm }) => {
         <p
           key={`slaInfo_${new Date().getTime()}_${i}`}
           className={`ma0 ${
-            !i ? 'firstShippingOption' : ''
+            !i ? styles.fistShippingOption : ''
           } slaInfo_position_${i} ${i > 1 ? 'dn' : ''}`}
         >
           {option.isPickup && (
-            <span className="pickUp">Pickup today at {option.storeName}</span>
+            <span className={styles.pickUp}>
+              <strong>Store Pickup:</strong> Order now &amp; pickup at{' '}
+              {option.storeName} {option.days === 0 ? 'today' : 'tomorrow'}
+            </span>
           )}
           {!option.isPickup && !option.price && (
-            <span className="freeShipping">
-              FREE shipping: Get it{' '}
+            <span className={styles.freeShipping}>
+              <strong>FREE shipping:</strong> Get it{' '}
               {option.days === 1 ? 'tomorrow' : `in ${option.days} days`}
             </span>
           )}
-          {!option.isPickup && option.price && (
-            <span className={option.days === 1 ? 'getTomorrow' : 'getInDays'}>
-              Get it {option.days === 1 ? 'tomorrow' : `in ${option.days} days`}
+          {!option.isPickup && !!option.price && (
+            <span
+              className={
+                option.days === 1 ? styles.getTomorrow : styles.getInDays
+              }
+            >
+              <strong>Shipping:</strong> Get it{' '}
+              {option.days === 1 ? 'tomorrow' : `in ${option.days} days`}
             </span>
           )}
         </p>
@@ -79,8 +90,10 @@ const CheckAvailability: FC<any> = ({ orderForm }) => {
     const [seller] = selectedItem.sellers
 
     if (
-      !prev[product.prodictId] ||
-      prev[product.prodictId] !== selectedItem.itemId
+      // eslint-disable-next-line no-restricted-globals
+      !isNaN(hasShipping.address.postalCode) &&
+      (!prev[product.prodictId] ||
+        prev[product.prodictId] !== selectedItem.itemId)
     ) {
       prev[product.prodictId] = selectedItem.itemId
       getSimulation({

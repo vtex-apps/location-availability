@@ -1,0 +1,26 @@
+.fistShippingOption {
+  color: rgb(48, 136, 0);
+  font-weight: 500;
+  font-size: 13px;
+}
+.freeShipping {
+  font-weight: 500;
+  font-size: 13px;
+}
+.cannotBeDelivered {
+  font-size: 13px;
+  color: rgb(187, 6, 40);
+}
+.cannotBeDeliveredBold {
+  font-size: 13px;
+  color: #000;
+}
+.pickUp {
+  font-size: 13px;
+}
+.getTomorrow {
+  font-size: 13px;
+}
+.getInDays {
+  font-size: 13px;
+}
