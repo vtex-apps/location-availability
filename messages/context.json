@@ -1,0 +1,12 @@
+{
+  "store/shipping-label": "store/shipping-label",
+  "store/shipping-message": "store/shipping-message",
+  "store/shipping-message-in": "store/shipping-message-in",
+  "store/shipping-message-days": "store/shipping-message-days",
+  "store/free-shipping-label": "store/free-shipping-label",
+  "store/store-pickup-label": "store/store-pickup-label",
+  "store/store-pickup-message": "store/store-pickup-message",
+  "store/unavailable-message": "store/unavailable-message",
+  "store/today": "store/today",
+  "store/tomorrow": "store/tomorrow"
+}

@@ -1,0 +1,14 @@
+## Sobre
+O aplicativo Quickorder é feito sob medida para necessidades B2B: cria uma página personalizada na sua loja destinada a compras em massa, oferecendo ferramentas tais como o carregamento de uma planilha para tornar os pedidos em massa mais simples.
+
+## Características
+- Copie e cole SKUs na página de compra rápida;
+- Carregue uma planilha com informação do SKU;
+- Pesquise por SKUs na barra de pesquisa personalizada;
+- Adicione produtos de acordo com a sua categoria.
+
+## Configuração
+
+1. Instale o aplicativo através da VTEX App Store;
+2. Uma nova rota chamada `/quickorder` será automaticamente criada para a sua loja, contendo a página personalizada que permite pedidos em massa. Esta nova página já contém um modelo padrão com todos os blocos exportados pela aplicação "Quickorder", o que significa que a página de encomenda rápida está pronta para ser usada e não são necessárias mais ações;
+3. Você pode personalizar a página de encomenda rápida substituindo o modelo, criando um novo como desejar. Para o fazer, consulte a documentação [aqui](https://github.com/vtex-apps/quickorder/#advanced-configurations).

@@ -1,4 +1,12 @@
 {
-  "admin/test": "teste",
-  "store/test": "teste"
+  "store/shipping-label": "Envío:",
+  "store/shipping-message": "Consíguelo",
+  "store/shipping-message-in": "en",
+  "store/shipping-message-days": "días",
+  "store/free-shipping-label": "Envío GRATIS:",
+  "store/store-pickup-label": "Recoger en tienda:",
+  "store/store-pickup-message": "Pide ahora y recoge en",
+  "store/unavailable-message": "No disponible para",
+  "store/today": "hoy",
+  "store/tomorrow": "mañana"
 }

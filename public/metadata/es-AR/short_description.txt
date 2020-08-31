@@ -1,0 +1,1 @@
+Permita que los usuarios de B2B agreguen varios productos al carrito a la vez.

@@ -1,19 +1,39 @@
 /* eslint-disable no-console */
 import React, { FC } from 'react'
-import { injectIntl } from 'react-intl'
+import { injectIntl, WrappedComponentProps, FormattedMessage } from 'react-intl'
 import { useLazyQuery, graphql, compose } from 'react-apollo'
 import useProduct from 'vtex.product-context/useProduct'
+import { useCssHandles } from 'vtex.css-handles'
 
 import SIMULATE from './queries/simulate.gql'
 import ORDERFORM from './queries/orderForm.gql'
 import styles from './styles.css'
 
 const prev: any = {}
+const CSS_HANDLES = [
+  'shippingOption',
+  'cannotBeDelivered',
+  'cannotBeDeliveredBold',
+  'postalCode',
+  'fistShippingOption',
+  'pickUp',
+  'pickUpStrong',
+  'freeShipping',
+  'freeShippingStrong',
+  'regularShipping',
+  'regularShippingStrong',
+  'regularShippingGetInDays',
+  'regularShippingGetTomorrow',
+] as const
 
-const CheckAvailability: FC<any> = ({ orderForm }) => {
+const CheckAvailability: FC<WrappedComponentProps & any> = ({
+  intl,
+  orderForm,
+}) => {
   const [getSimulation, { data, loading }] = useLazyQuery(SIMULATE)
 
   const skuSelector = useProduct()
+  const handles = useCssHandles(CSS_HANDLES)
 
   if (!skuSelector || !orderForm) return null
 
@@ -29,9 +49,18 @@ const CheckAvailability: FC<any> = ({ orderForm }) => {
     if (availability === 'withoutStock') return
     if (availability === 'cannotBeDelivered')
       return (
-        <p className={styles.cannotBeDelivered}>
-          <strong className={styles.cannotBeDeliveredBold}>Shipping:</strong>{' '}
-          Unavailable for {hasShipping.address.postalCode}
+        <p
+          className={`${styles.cannotBeDelivered} ${handles.shippingOption} ${handles.cannotBeDelivered}`}
+        >
+          <strong
+            className={`${styles.cannotBeDeliveredBold} ${handles.cannotBeDeliveredBold}`}
+          >
+            <FormattedMessage id="store/shipping-label" />
+          </strong>{' '}
+          <FormattedMessage id="store/unavailable-message" />{' '}
+          <span className={handles.postalCode}>
+            {hasShipping.address.postalCode}
+          </span>
         </p>
       )
 
@@ -54,31 +83,67 @@ const CheckAvailability: FC<any> = ({ orderForm }) => {
     return structured.map((option: any, i: number) => {
       return (
         <p
-          key={`slaInfo_${new Date().getTime()}_${i}`}
+          key={`${handles.shippingOption} slaInfo_${new Date().getTime()}_${i}`}
           className={`ma0 ${
-            !i ? styles.fistShippingOption : ''
+            !i
+              ? `${styles.fistShippingOption} ${handles.fistShippingOption}`
+              : ''
           } slaInfo_position_${i} ${i > 1 ? 'dn' : ''}`}
         >
           {option.isPickup && (
-            <span className={styles.pickUp}>
-              <strong>Store Pickup:</strong> Order now &amp; pickup at{' '}
-              {option.storeName} {option.days === 0 ? 'today' : 'tomorrow'}
+            <span className={`${styles.pickUp} ${handles.pickUp}`}>
+              <strong className={`${handles.pickUpStrong}`}>
+                <FormattedMessage id="store/store-pickup-label" />
+              </strong>{' '}
+              <FormattedMessage id="store/store-pickup-message" />{' '}
+              {option.storeName}{' '}
+              {option.days === 0
+                ? intl.formatMessage({
+                    id: 'store/today',
+                  })
+                : intl.formatMessage({
+                    id: 'store/tomorrow',
+                  })}
             </span>
           )}
           {!option.isPickup && !option.price && (
-            <span className={styles.freeShipping}>
-              <strong>FREE shipping:</strong> Get it{' '}
-              {option.days === 1 ? 'tomorrow' : `in ${option.days} days`}
+            <span className={`${styles.freeShipping} ${handles.freeShipping}`}>
+              <strong className={handles.freeShippingStrong}>
+                <FormattedMessage id="store/free-shipping-label" />
+              </strong>{' '}
+              <FormattedMessage id="store/shipping-message" />{' '}
+              {option.days === 1
+                ? intl.formatMessage({
+                    id: 'store/tomorrow',
+                  })
+                : `${intl.formatMessage({
+                    id: 'store/shipping-message-in',
+                  })} ${option.days} ${intl.formatMessage({
+                    id: 'store/shipping-message-days',
+                  })}`}
             </span>
           )}
           {!option.isPickup && !!option.price && (
             <span
-              className={
-                option.days === 1 ? styles.getTomorrow : styles.getInDays
-              }
+              className={`${handles.regularShipping} ${
+                option.days === 1
+                  ? `${styles.getTomorrow} ${handles.regularShippingGetTomorrow}`
+                  : `${styles.getInDays} ${handles.regularShippingGetInDays}`
+              }`}
             >
-              <strong>Shipping:</strong> Get it{' '}
-              {option.days === 1 ? 'tomorrow' : `in ${option.days} days`}
+              <strong className={handles.regularShippingStrong}>
+                <FormattedMessage id="store/shipping-label" />
+              </strong>{' '}
+              <FormattedMessage id="store/shipping-message" />{' '}
+              {option.days === 1
+                ? intl.formatMessage({
+                    id: 'store/tomorrow',
+                  })
+                : `${intl.formatMessage({
+                    id: 'store/shipping-message-in',
+                  })} ${option.days} ${intl.formatMessage({
+                    id: 'store/shipping-message-days',
+                  })}`}
             </span>
           )}
         </p>

@@ -1,4 +1,12 @@
 {
-  "admin/test": "test",
-  "store/test": "test"
+  "store/shipping-label": "Shipping:",
+  "store/shipping-message": "Get it",
+  "store/shipping-message-in": "in",
+  "store/shipping-message-days": "days",
+  "store/free-shipping-label": "FREE Shipping:",
+  "store/store-pickup-label": "Store Pickup:",
+  "store/store-pickup-message": "Order now & pickup at",
+  "store/unavailable-message": "Unavailable for",
+  "store/today": "today",
+  "store/tomorrow": "tomorrow"
 }

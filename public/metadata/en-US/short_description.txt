@@ -1,0 +1,1 @@
+Allow B2B users to add multiple products to the cart at once.
