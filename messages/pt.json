@@ -1,4 +1,6 @@
 {
+  "admin/editor.product-location-availability.title": "Locais de disponibilidade do produto",
+  "admin/editor.product-location-availability.maxItems.title": "Máximo de items",
   "store/shipping-label": "Entrega:",
   "store/shipping-message": "Receba",
   "store/shipping-message-in": "em",

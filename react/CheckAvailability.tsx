@@ -10,25 +10,24 @@ import ORDERFORM from './queries/orderForm.gql'
 import styles from './styles.css'
 
 const prev: any = {}
+const DEFAULT_MAX_ITEMS = 2
 const CSS_HANDLES = [
   'shippingOption',
-  'cannotBeDelivered',
-  'cannotBeDeliveredBold',
   'postalCode',
-  'fistShippingOption',
-  'pickUp',
-  'pickUpStrong',
-  'freeShipping',
-  'freeShippingStrong',
+  'pickUpLabel',
+  'freeShippingLabel',
   'regularShipping',
-  'regularShippingStrong',
+  'regularShippingLabel',
   'regularShippingGetInDays',
   'regularShippingGetTomorrow',
+  'time',
+  'ETA',
 ] as const
 
 const CheckAvailability: FC<WrappedComponentProps & any> = ({
   intl,
   orderForm,
+  maxItems,
 }) => {
   const [getSimulation, { data, loading }] = useLazyQuery(SIMULATE)
 
@@ -49,14 +48,10 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
     if (availability === 'withoutStock') return
     if (availability === 'cannotBeDelivered')
       return (
-        <p
-          className={`${styles.cannotBeDelivered} ${handles.shippingOption} ${handles.cannotBeDelivered}`}
-        >
-          <strong
-            className={`${styles.cannotBeDeliveredBold} ${handles.cannotBeDeliveredBold}`}
-          >
+        <p className={`${styles.cannotBeDelivered} ${handles.shippingOption}`}>
+          <span className={`${styles.cannotBeDeliveredLabel}`}>
             <FormattedMessage id="store/shipping-label" />
-          </strong>{' '}
+          </span>{' '}
           <FormattedMessage id="store/unavailable-message" />{' '}
           <span className={handles.postalCode}>
             {hasShipping.address.postalCode}
@@ -81,46 +76,56 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
       })
 
     return structured.map((option: any, i: number) => {
-      return (
+      return i < maxItems ? (
         <p
-          key={`${handles.shippingOption} slaInfo_${new Date().getTime()}_${i}`}
-          className={`ma0 ${
-            !i
-              ? `${styles.fistShippingOption} ${handles.fistShippingOption}`
-              : ''
-          } slaInfo_position_${i} ${i > 1 ? 'dn' : ''}`}
+          key={`slaInfo_${new Date().getTime()}_${i}`}
+          className={`ma0 ${handles.shippingOption} ${
+            !i ? `${styles.firstShippingOption}` : ''
+          } vtex-slaInfo_position_${i}`}
         >
           {option.isPickup && (
-            <span className={`${styles.pickUp} ${handles.pickUp}`}>
-              <strong className={`${handles.pickUpStrong}`}>
+            <span className={`${styles.pickUp}`}>
+              <span className={`${handles.pickUpLabel}`}>
                 <FormattedMessage id="store/store-pickup-label" />
-              </strong>{' '}
+              </span>{' '}
               <FormattedMessage id="store/store-pickup-message" />{' '}
               {option.storeName}{' '}
-              {option.days === 0
-                ? intl.formatMessage({
-                    id: 'store/today',
-                  })
-                : intl.formatMessage({
-                    id: 'store/tomorrow',
-                  })}
+              <span className={handles.ETA}>
+                {option.days === 0
+                  ? intl.formatMessage({
+                      id: 'store/today',
+                    })
+                  : intl.formatMessage({
+                      id: 'store/tomorrow',
+                    })}
+              </span>
             </span>
           )}
           {!option.isPickup && !option.price && (
-            <span className={`${styles.freeShipping} ${handles.freeShipping}`}>
-              <strong className={handles.freeShippingStrong}>
+            <span className={`${styles.freeShipping}`}>
+              <span className={handles.freeShippingLabel}>
                 <FormattedMessage id="store/free-shipping-label" />
-              </strong>{' '}
+              </span>{' '}
               <FormattedMessage id="store/shipping-message" />{' '}
-              {option.days === 1
-                ? intl.formatMessage({
+              {option.days === 1 ? (
+                <span className={handles.ETA}>
+                  {intl.formatMessage({
                     id: 'store/tomorrow',
-                  })
-                : `${intl.formatMessage({
+                  })}
+                </span>
+              ) : (
+                <span className={handles.time}>
+                  {intl.formatMessage({
                     id: 'store/shipping-message-in',
-                  })} ${option.days} ${intl.formatMessage({
-                    id: 'store/shipping-message-days',
-                  })}`}
+                  })}{' '}
+                  <span className={handles.ETA}>
+                    {option.days}{' '}
+                    {intl.formatMessage({
+                      id: 'store/shipping-message-days',
+                    })}
+                  </span>
+                </span>
+              )}
             </span>
           )}
           {!option.isPickup && !!option.price && (
@@ -131,22 +136,34 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
                   : `${styles.getInDays} ${handles.regularShippingGetInDays}`
               }`}
             >
-              <strong className={handles.regularShippingStrong}>
+              <span className={handles.regularShippingLabel}>
                 <FormattedMessage id="store/shipping-label" />
-              </strong>{' '}
+              </span>{' '}
               <FormattedMessage id="store/shipping-message" />{' '}
-              {option.days === 1
-                ? intl.formatMessage({
+              {option.days === 1 ? (
+                <span className={handles.ETA}>
+                  {intl.formatMessage({
                     id: 'store/tomorrow',
-                  })
-                : `${intl.formatMessage({
+                  })}
+                </span>
+              ) : (
+                <span className={handles.time}>
+                  {intl.formatMessage({
                     id: 'store/shipping-message-in',
-                  })} ${option.days} ${intl.formatMessage({
-                    id: 'store/shipping-message-days',
-                  })}`}
+                  })}{' '}
+                  <span className={handles.ETA}>
+                    {option.days}{' '}
+                    {intl.formatMessage({
+                      id: 'store/shipping-message-days',
+                    })}
+                  </span>
+                </span>
+              )}
             </span>
           )}
         </p>
+      ) : (
+        ''
       )
     })
   }
@@ -180,6 +197,10 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
   return data?.shipping?.items && !loading ? (
     <div> {buildResponse(data.shipping)}</div>
   ) : null
+}
+
+CheckAvailability.defaultProps = {
+  maxItems: DEFAULT_MAX_ITEMS,
 }
 
 export default injectIntl(

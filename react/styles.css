@@ -1,22 +1,31 @@
-.fistShippingOption {
+.firstShippingOption {
   color: rgb(48, 136, 0);
-  font-weight: 500;
   font-size: 13px;
 }
 .freeShipping {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 13px;
 }
 .cannotBeDelivered {
   font-size: 13px;
   color: rgb(187, 6, 40);
 }
-.cannotBeDeliveredBold {
+.cannotBeDeliveredLavel {
   font-size: 13px;
   color: #000;
+  font-weight: 600;
 }
 .pickUp {
   font-size: 13px;
+}
+.pickUpLabel {
+  font-weight: 600;
+}
+.freeShippingLabel {
+  font-weight: 600;
+}
+.regularShippingLabel {
+  font-weight: 600;
 }
 .getTomorrow {
   font-size: 13px;

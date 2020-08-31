@@ -1,4 +1,6 @@
 {
+  "admin/editor.product-location-availability.title": "admin/editor.product-location-availability.title",
+  "admin/editor.product-location-availability.maxItems.title": "admin/editor.product-location-availability.maxItems.title",
   "store/shipping-label": "store/shipping-label",
   "store/shipping-message": "store/shipping-message",
   "store/shipping-message-in": "store/shipping-message-in",
