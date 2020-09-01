@@ -16,9 +16,9 @@ This app provides availability and shipping information based on User's location
 
 ## Configuration
 
-1. [Install](https://vtex.io/docs/recipes/development/installing-an-app/) the Quickorder app by running `vtex install vtex.location-availability@0.x`.
+1. [Install](https://vtex.io/docs/recipes/development/installing-an-app/) the Location Availability app by running `vtex install vtex.location-availability@0.x`.
 2. Open your store's Store Theme app directory in your code editor.
-3. Add the Quickorder app as a `peerDependency` in the `manifest.json` file:
+3. Add the Location Availability app as a `peerDependency` in the `manifest.json` file:
 
 ```diff
  "peerDependencies": {
