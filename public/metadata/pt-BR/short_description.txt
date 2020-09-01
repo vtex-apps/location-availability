@@ -1,1 +1,1 @@
-Permite que usuários B2B adicionem múltiplos produtos ao carrinho de uma só vez.
+Este app exibe informação de disponibilidade e entrega do produto baseado na localização do usuário

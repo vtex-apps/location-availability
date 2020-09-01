@@ -1,1 +1,1 @@
-Permita que los usuarios de B2B agreguen varios productos al carrito a la vez.
+Esta aplicación proporciona información de disponibilidad y envío según la ubicación del usuario

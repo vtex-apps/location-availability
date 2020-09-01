@@ -12,14 +12,10 @@ import styles from './styles.css'
 const prev: any = {}
 const DEFAULT_MAX_ITEMS = 2
 const CSS_HANDLES = [
+  'container',
   'shippingOption',
   'postalCode',
-  'pickUpLabel',
-  'freeShippingLabel',
   'regularShipping',
-  'regularShippingLabel',
-  'regularShippingGetInDays',
-  'regularShippingGetTomorrow',
   'time',
   'ETA',
 ] as const
@@ -85,7 +81,7 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
         >
           {option.isPickup && (
             <span className={`${styles.pickUp}`}>
-              <span className={`${handles.pickUpLabel}`}>
+              <span className={`${styles.pickUpLabel}`}>
                 <FormattedMessage id="store/store-pickup-label" />
               </span>{' '}
               <FormattedMessage id="store/store-pickup-message" />{' '}
@@ -103,7 +99,7 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
           )}
           {!option.isPickup && !option.price && (
             <span className={`${styles.freeShipping}`}>
-              <span className={handles.freeShippingLabel}>
+              <span className={styles.freeShippingLabel}>
                 <FormattedMessage id="store/free-shipping-label" />
               </span>{' '}
               <FormattedMessage id="store/shipping-message" />{' '}
@@ -132,11 +128,11 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
             <span
               className={`${handles.regularShipping} ${
                 option.days === 1
-                  ? `${styles.getTomorrow} ${handles.regularShippingGetTomorrow}`
-                  : `${styles.getInDays} ${handles.regularShippingGetInDays}`
+                  ? `${styles.getTomorrow}`
+                  : `${styles.getInDays}`
               }`}
             >
-              <span className={handles.regularShippingLabel}>
+              <span className={styles.regularShippingLabel}>
                 <FormattedMessage id="store/shipping-label" />
               </span>{' '}
               <FormattedMessage id="store/shipping-message" />{' '}
@@ -168,6 +164,8 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
     })
   }
 
+  console.log('selectedItem =>', selectedItem)
+
   if (selectedItem && hasShipping) {
     const [seller] = selectedItem.sellers
 
@@ -195,7 +193,7 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
   }
 
   return data?.shipping?.items && !loading ? (
-    <div> {buildResponse(data.shipping)}</div>
+    <div className={handles.container}> {buildResponse(data.shipping)}</div>
   ) : null
 }
 

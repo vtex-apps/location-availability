@@ -1,1 +1,1 @@
-Allow B2B users to add multiple products to the cart at once.
+This app provides availability and shipping information based on User's location
