@@ -192,6 +192,11 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
     }
   }
 
+  // Listen to address changes from the app vtex.shopper-location
+  window.addEventListener('locationUpdated', () => {
+    orderForm.refetch()
+  })
+
   return data?.shipping?.items && !loading ? (
     <div className={handles.container}> {buildResponse(data.shipping)}</div>
   ) : null
