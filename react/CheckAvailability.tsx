@@ -39,7 +39,7 @@ interface CheckAvailabilityProps {
 
 const CheckAvailability: StorefrontFunctionComponent<
   WrappedComponentProps & CheckAvailabilityProps
-> = ({ intl, orderForm, maxItems }: any) => {
+> = ({ intl, orderForm, maxItems, orderBy, pickupFirst }: any) => {
   const [getSimulation, { data, loading }] = useLazyQuery(SIMULATE)
 
   const skuSelector = useProduct()
@@ -71,20 +71,38 @@ const CheckAvailability: StorefrontFunctionComponent<
       )
 
     const structured = slas
-      .sort((a: any, b: any) => {
-        const a1 = parseInt(a.shippingEstimate.replace(/\D/g, ''), 10)
-        const b1 = parseInt(b.shippingEstimate.replace(/\D/g, ''), 10)
-
-        return a1 < b1 ? -1 : a1 > b1 ? 1 : 0
-      })
       .map((option: any) => {
         return {
-          ...option,
+          price: option.price,
           isPickup: !!option.pickupStoreInfo.address,
           storeName: option.pickupStoreInfo.friendlyName,
           days: parseInt(option.shippingEstimate.replace(/\D/g, ''), 10),
         }
       })
+      .sort((a: any, b: any) => {
+        const a1 = a[orderBy === 'faster' ? 'days' : 'price']
+        const b1 = b[orderBy === 'faster' ? 'days' : 'price']
+
+        return a1 < b1 ? -1 : a1 > b1 ? 1 : 0
+      })
+
+    const pickupIndex = structured.findIndex((el: any) => {
+      return el.isPickup
+    })
+
+    if (pickupIndex > -1) {
+      const newIndex = pickupFirst ? 0 : structured.length - 1
+
+      if (pickupIndex !== newIndex) {
+        const [pickupItem] = structured.splice(pickupIndex, 1)
+
+        if (newIndex > pickupIndex) {
+          structured.push(pickupItem)
+        } else {
+          structured.unshift(pickupItem)
+        }
+      }
+    }
 
     return structured.map((option: any, i: number) => {
       return i < maxItems ? (
@@ -178,8 +196,6 @@ const CheckAvailability: StorefrontFunctionComponent<
       )
     })
   }
-
-  console.log('selectedItem =>', selectedItem)
 
   if (selectedItem && hasShipping) {
     const [seller] = selectedItem.sellers
