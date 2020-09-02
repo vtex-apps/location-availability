@@ -10,3 +10,4 @@ declare global {
     getSchema?(props: P): object
     schema: object
   }
+}
