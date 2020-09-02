@@ -25,6 +25,6 @@
     "vtex.product-context": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.product-context@0.8.1/public/@types/vtex.product-context",
     "vtex.render-runtime": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.112.0/public/@types/vtex.render-runtime",
     "vtex.store": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.store@2.101.0/public/@types/vtex.store",
-    "vtex.store-graphql": "https://wender--sandboxusdev.myvtex.com/_v/private/typings/linked/v1/vtex.store-graphql@2.129.1+build1598978695/public/@types/vtex.store-graphql"
+    "vtex.store-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.store-graphql@2.130.0/public/@types/vtex.store-graphql"
   }
 }

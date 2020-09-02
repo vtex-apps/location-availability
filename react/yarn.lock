@@ -4768,9 +4768,9 @@ verror@1.10.0:
   version "8.112.0"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.112.0/public/@types/vtex.render-runtime#d24f7d970497a80e1e38864db09bbe5da61e0696"
 
-"vtex.store-graphql@https://wender--sandboxusdev.myvtex.com/_v/private/typings/linked/v1/vtex.store-graphql@2.129.1+build1598978695/public/@types/vtex.store-graphql":
-  version "2.129.1"
-  resolved "https://wender--sandboxusdev.myvtex.com/_v/private/typings/linked/v1/vtex.store-graphql@2.129.1+build1598978695/public/@types/vtex.store-graphql#5bb33a388832d887fc61a87aadd9f71784e69cfc"
+"vtex.store-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.store-graphql@2.130.0/public/@types/vtex.store-graphql":
+  version "2.130.0"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.store-graphql@2.130.0/public/@types/vtex.store-graphql#4c1bd572898fc9382c5b8e5eeca8fa757c6f38ce"
 
 "vtex.store@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.store@2.101.0/public/@types/vtex.store":
   version "2.101.0"
