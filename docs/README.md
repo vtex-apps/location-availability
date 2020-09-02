@@ -30,9 +30,11 @@ Now, you are able to use the block `product-location-availability` exported by t
 
 ### `product-location-availability` props
 
-| Prop name  | Type     | Description                                    | Default value |
-| ---------- | -------- | ---------------------------------------------- | ------------- |
-| `maxItems` | `number` | Maximum number of shipping options per product | `2`           |
+| Prop name     | Type      | Description                                           | Default value |
+| ------------- | --------- | ----------------------------------------------------- | ------------- |
+| `maxItems`    | `number`  | Maximum number of shipping options per product        | `2`           |
+| `orderBy`     | `enum`    | Sort the shipping options by `faster` or `cheaper`    | `faster`      |
+| `pickupFirst` | `boolean` | When available, show the pickup, before other options | `true`        |
 
 ### Example
 
@@ -49,7 +51,9 @@ Now, you are able to use the block `product-location-availability` exported by t
   },
 +  "product-location-availability": {
 +    "props": {
-+      "maxItems": 2
++      "maxItems": 3
++      "orderBy": "cheaper"
++      "pickupFirst": "false"
 +    }
 +  }
 ...

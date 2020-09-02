@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `orderBy` and `pickupFirst` properties
+
+### Updated
+
+- Doc
+
 ## [0.0.1] - 2020-09-02
 
 ### Added

@@ -1,6 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-import React, { FC } from 'react'
-import { injectIntl, WrappedComponentProps, FormattedMessage } from 'react-intl'
+import React from 'react'
+import {
+  injectIntl,
+  FormattedMessage,
+  WrappedComponentProps,
+  defineMessages,
+} from 'react-intl'
 import { useLazyQuery, graphql, compose } from 'react-apollo'
 import useProduct from 'vtex.product-context/useProduct'
 import { useCssHandles } from 'vtex.css-handles'
@@ -10,7 +16,12 @@ import ORDERFORM from './queries/orderForm.gql'
 import styles from './styles.css'
 
 const prev: any = {}
-const DEFAULT_MAX_ITEMS = 2
+const DEFAULT = {
+  MAX_ITEMS: 2,
+  ORDER_BY: 'faster',
+  PICKUP_FIRST: true,
+}
+
 const CSS_HANDLES = [
   'container',
   'shippingOption',
@@ -20,11 +31,16 @@ const CSS_HANDLES = [
   'ETA',
 ] as const
 
-const CheckAvailability: FC<WrappedComponentProps & any> = ({
-  intl,
-  orderForm,
-  maxItems,
-}) => {
+interface CheckAvailabilityProps {
+  orderForm: any
+  maxItems: number
+  orderBy: string
+  pickupFirst: boolean
+}
+
+const CheckAvailability: StorefrontFunctionComponent<
+  WrappedComponentProps & CheckAvailabilityProps
+> = ({ intl, orderForm, maxItems, orderBy, pickupFirst }: any) => {
   const [getSimulation, { data, loading }] = useLazyQuery(SIMULATE)
 
   const skuSelector = useProduct()
@@ -56,20 +72,38 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
       )
 
     const structured = slas
-      .sort((a: any, b: any) => {
-        const a1 = parseInt(a.shippingEstimate.replace(/\D/g, ''), 10)
-        const b1 = parseInt(b.shippingEstimate.replace(/\D/g, ''), 10)
-
-        return a1 < b1 ? -1 : a1 > b1 ? 1 : 0
-      })
       .map((option: any) => {
         return {
-          ...option,
+          price: option.price,
           isPickup: !!option.pickupStoreInfo.address,
           storeName: option.pickupStoreInfo.friendlyName,
           days: parseInt(option.shippingEstimate.replace(/\D/g, ''), 10),
         }
       })
+      .sort((a: any, b: any) => {
+        const a1 = a[orderBy === 'faster' ? 'days' : 'price']
+        const b1 = b[orderBy === 'faster' ? 'days' : 'price']
+
+        return a1 < b1 ? -1 : a1 > b1 ? 1 : 0
+      })
+
+    const pickupIndex = structured.findIndex((el: any) => {
+      return el.isPickup
+    })
+
+    if (pickupIndex > -1) {
+      const newIndex = pickupFirst ? 0 : structured.length - 1
+
+      if (pickupIndex !== newIndex) {
+        const [pickupItem] = structured.splice(pickupIndex, 1)
+
+        if (newIndex > pickupIndex) {
+          structured.push(pickupItem)
+        } else {
+          structured.unshift(pickupItem)
+        }
+      }
+    }
 
     return structured.map((option: any, i: number) => {
       return i < maxItems ? (
@@ -164,8 +198,6 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
     })
   }
 
-  console.log('selectedItem =>', selectedItem)
-
   if (selectedItem && hasShipping) {
     const [seller] = selectedItem.sellers
 
@@ -202,8 +234,69 @@ const CheckAvailability: FC<WrappedComponentProps & any> = ({
   ) : null
 }
 
+const messages = defineMessages({
+  title: {
+    defaultMessage: '',
+    id: 'admin/editor.product-location-availability.title',
+  },
+  description: {
+    defaultMessage: '',
+    id: 'admin/editor.product-location-availability.description',
+  },
+  maxItems: {
+    defaultMessage: '',
+    id: 'admin/editor.product-location-availability.maxItems.title',
+  },
+  orderBy: {
+    defaultMessage: '',
+    id: 'admin/editor.product-location-availability.orderBy.title',
+  },
+  pickupFirst: {
+    defaultMessage: '',
+    id: 'admin/editor.product-location-availability.pickupFirst.title',
+  },
+  faster: {
+    defaultMessage: '',
+    id: 'admin/editor.product-location-availability.orderBy.faster',
+  },
+  cheaper: {
+    defaultMessage: '',
+    id: 'admin/editor.product-location-availability.orderBy.cheaper',
+  },
+})
+
+CheckAvailability.schema = {
+  title: messages.title,
+  description: messages.description,
+  type: 'object',
+  properties: {
+    maxItems: {
+      title: messages.maxItems,
+      type: 'number',
+      default: 2,
+      isLayout: true,
+    },
+    orderBy: {
+      title: messages.orderBy,
+      type: 'string',
+      enum: ['faster', 'cheaper'],
+      enumNames: [messages.faster, messages.cheaper],
+      default: 'faster',
+      isLayout: true,
+    },
+    pickupFirst: {
+      title: messages.pickupFirst,
+      type: 'boolean',
+      default: true,
+      isLayout: true,
+    },
+  },
+}
+
 CheckAvailability.defaultProps = {
-  maxItems: DEFAULT_MAX_ITEMS,
+  maxItems: DEFAULT.MAX_ITEMS,
+  orderBy: DEFAULT.ORDER_BY,
+  pickupFirst: DEFAULT.PICKUP_FIRST,
 }
 
 export default injectIntl(

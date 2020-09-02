@@ -1,6 +1,11 @@
 {
   "admin/editor.product-location-availability.title": "Disponibilidad de la ubicación del producto",
+  "admin/editor.product-location-availability.description": "Muestra las opciones de envío según la ubicación del usuario.",
   "admin/editor.product-location-availability.maxItems.title": "Elementos máximos",
+  "admin/editor.product-location-availability.orderBy.title": "Ordenar por",
+  "admin/editor.product-location-availability.orderBy.faster": "Más rápido",
+  "admin/editor.product-location-availability.orderBy.cheaper": "Mas barato",
+  "admin/editor.product-location-availability.pickupFirst.title": "Recoger primero",
   "store/shipping-label": "Envío:",
   "store/shipping-message": "Consíguelo",
   "store/shipping-message-in": "en",
