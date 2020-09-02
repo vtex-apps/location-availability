@@ -1,6 +1,11 @@
 {
   "admin/editor.product-location-availability.title": "admin/editor.product-location-availability.title",
+  "admin/editor.product-location-availability.description": "admin/editor.product-location-availability.description",
   "admin/editor.product-location-availability.maxItems.title": "admin/editor.product-location-availability.maxItems.title",
+  "admin/editor.product-location-availability.orderBy.title": "admin/editor.product-location-availability.orderBy.title",
+  "admin/editor.product-location-availability.orderBy.faster": "admin/editor.product-location-availability.orderBy.faster",
+  "admin/editor.product-location-availability.orderBy.cheaper": "admin/editor.product-location-availability.orderBy.cheaper",
+  "admin/editor.product-location-availability.pickupFirst.title": "admin/editor.product-location-availability.pickupFirst.title",
   "store/shipping-label": "store/shipping-label",
   "store/shipping-message": "store/shipping-message",
   "store/shipping-message-in": "store/shipping-message-in",
