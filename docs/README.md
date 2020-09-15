@@ -53,7 +53,7 @@ Now, you are able to use the block `product-location-availability` exported by t
 +    "props": {
 +      "maxItems": 3
 +      "orderBy": "cheaper"
-+      "pickupFirst": "false"
++      "pickupFirst": false
 +    }
 +  }
 ...
@@ -61,7 +61,7 @@ Now, you are able to use the block `product-location-availability` exported by t
 
 ## Modus Operandi
 
-This app is a complement to the availability information for the products, it shows different shipping options for the products.
+This app is a complement to the availability information for the products, it shows different shipping options for the products, you can configure how many options will be visible at the same time, also show pickup option first, it will not show the same kind of shipping twice (Free, Pickup, Regular).
 
 It's a common practice for the biggest B2C players, this helps customers on the buying decision
 
