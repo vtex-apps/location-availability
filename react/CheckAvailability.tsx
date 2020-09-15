@@ -71,7 +71,8 @@ const CheckAvailability: StorefrontFunctionComponent<
         </p>
       )
 
-    const structured = slas
+    const kind: any = {}
+    const structured: any = slas
       .map((option: any) => {
         return {
           price: option.price,
@@ -85,6 +86,21 @@ const CheckAvailability: StorefrontFunctionComponent<
         const b1 = b[orderBy === 'faster' ? 'days' : 'price']
 
         return a1 < b1 ? -1 : a1 > b1 ? 1 : 0
+      })
+      .filter(($item: any) => {
+        const currKind = $item.isPickup
+          ? 'pickup'
+          : $item.price === 0
+          ? 'free'
+          : 'regular'
+
+        if (!kind[currKind]) {
+          kind[currKind] = true
+
+          return true
+        }
+
+        return false
       })
 
     const pickupIndex = structured.findIndex((el: any) => {
