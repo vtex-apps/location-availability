@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- EDT with "in days" for pickup with more than 1 day
+
 ## [0.1.1] - 2020-09-15
 
 ### Added
