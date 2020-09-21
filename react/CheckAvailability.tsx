@@ -137,13 +137,27 @@ const CheckAvailability: StorefrontFunctionComponent<
               <FormattedMessage id="store/store-pickup-message" />{' '}
               {option.storeName}{' '}
               <span className={handles.ETA}>
-                {option.days === 0
-                  ? intl.formatMessage({
-                      id: 'store/today',
-                    })
-                  : intl.formatMessage({
-                      id: 'store/tomorrow',
-                    })}
+                {option.days === 0 ? (
+                  intl.formatMessage({
+                    id: 'store/today',
+                  })
+                ) : option.days === 1 ? (
+                  intl.formatMessage({
+                    id: 'store/tomorrow',
+                  })
+                ) : (
+                  <span className={handles.time}>
+                    {intl.formatMessage({
+                      id: 'store/shipping-message-in',
+                    })}{' '}
+                    <span className={handles.ETA}>
+                      {option.days}{' '}
+                      {intl.formatMessage({
+                        id: 'store/shipping-message-days',
+                      })}
+                    </span>
+                  </span>
+                )}
               </span>
             </span>
           )}
