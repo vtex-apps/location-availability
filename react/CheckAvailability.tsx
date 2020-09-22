@@ -232,6 +232,7 @@ const CheckAvailability: StorefrontFunctionComponent<
     const [seller] = selectedItem.sellers
 
     if (
+      !!hasShipping?.address?.postalCode &&
       // eslint-disable-next-line no-restricted-globals
       !isNaN(hasShipping.address.postalCode) &&
       (!prev[product.prodictId] ||
