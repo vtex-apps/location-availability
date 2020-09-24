@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   injectIntl,
   FormattedMessage,
   WrappedComponentProps,
   defineMessages,
 } from 'react-intl'
-import { useLazyQuery, graphql, compose } from 'react-apollo'
-import useProduct from 'vtex.product-context/useProduct'
+import { useLazyQuery, useQuery } from 'react-apollo'
+import { useProduct } from 'vtex.product-context'
 import { useCssHandles } from 'vtex.css-handles'
 
 import SIMULATE from './queries/simulate.gql'
@@ -32,7 +32,6 @@ const CSS_HANDLES = [
 ] as const
 
 interface CheckAvailabilityProps {
-  orderForm: any
   maxItems: number
   orderBy: string
   pickupFirst: boolean
@@ -40,16 +39,27 @@ interface CheckAvailabilityProps {
 
 const CheckAvailability: StorefrontFunctionComponent<
   WrappedComponentProps & CheckAvailabilityProps
-> = ({ intl, orderForm, maxItems, orderBy, pickupFirst }: any) => {
+> = ({ intl, maxItems, orderBy, pickupFirst }: any) => {
   const [getSimulation, { data, loading }] = useLazyQuery(SIMULATE)
+  const { data: orderFormData, refetch } = useQuery(ORDERFORM, { ssr: false })
 
   const skuSelector = useProduct()
   const handles = useCssHandles(CSS_HANDLES)
 
-  if (!skuSelector || !orderForm) return null
+  useEffect(() => {
+    const handleLocationUpdated = () => refetch()
+
+    window.addEventListener('locationUpdated', handleLocationUpdated)
+
+    return () => {
+      window.removeEventListener('locationUpdated', handleLocationUpdated)
+    }
+  }, [refetch])
+
+  if (!skuSelector || !orderFormData) return null
 
   const { selectedItem, product } = skuSelector
-  const hasShipping = orderForm?.orderForm?.shippingData
+  const hasShipping = orderFormData?.orderForm?.shippingData
 
   const buildResponse = (item: any) => {
     const [status] = item.items
@@ -235,10 +245,11 @@ const CheckAvailability: StorefrontFunctionComponent<
       !!hasShipping?.address?.postalCode &&
       // eslint-disable-next-line no-restricted-globals
       !isNaN(hasShipping.address.postalCode) &&
-      (!prev[product.prodictId] ||
-        prev[product.prodictId] !== selectedItem.itemId)
+      product &&
+      (!prev[product.productId] ||
+        prev[product.productId] !== selectedItem.itemId)
     ) {
-      prev[product.prodictId] = selectedItem.itemId
+      prev[product.productId] = selectedItem.itemId
       getSimulation({
         variables: {
           items: [
@@ -254,11 +265,6 @@ const CheckAvailability: StorefrontFunctionComponent<
       })
     }
   }
-
-  // Listen to address changes from the app vtex.shopper-location
-  window.addEventListener('locationUpdated', () => {
-    orderForm.refetch()
-  })
 
   return data?.shipping?.items && !loading ? (
     <div className={handles.container}> {buildResponse(data.shipping)}</div>
@@ -330,13 +336,4 @@ CheckAvailability.defaultProps = {
   pickupFirst: DEFAULT.PICKUP_FIRST,
 }
 
-export default injectIntl(
-  compose(
-    graphql(ORDERFORM, {
-      name: 'orderForm',
-      options: {
-        ssr: false,
-      },
-    })
-  )(CheckAvailability)
-)
+export default injectIntl(CheckAvailability)
