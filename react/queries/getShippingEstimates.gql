@@ -1,0 +1,19 @@
+query getShippingEstimates(
+  $items: [ShippingItem]
+  $postalCode: String
+  $country: String
+) {
+  shipping(items: $items, postalCode: $postalCode, country: $country)
+    @context(provider: "vtex.store-graphql") {
+    logisticsInfo {
+      itemIndex
+      slas {
+        id
+        friendlyName
+        price
+        shippingEstimate
+        shippingEstimateDate
+      }
+    }
+  }
+}
