@@ -22,7 +22,7 @@ const ShippingQuery: FunctionComponent = ({ children }) => {
 
   const validVars = location?.postalCode && location?.country && selectedItem
 
-  const { data, loading } = useQuery(SIMULATE, {
+  const { data, loading, refetch } = useQuery(SIMULATE, {
     ssr: false,
     skip: !validVars,
     variables: {
@@ -62,6 +62,10 @@ const ShippingQuery: FunctionComponent = ({ children }) => {
       },
     })
   }, [data, dispatch])
+
+  useEffect(() => {
+    refetch()
+  }, [location, refetch])
 
   if (loading) return <ItemLoader />
 
