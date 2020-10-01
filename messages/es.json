@@ -7,6 +7,7 @@
   "admin/editor.location-availability.product-location-availability.orderBy.cheaper": "Mas barato",
   "admin/editor.location-availability.product-location-availability.pickupFirst.title": "Recoger primero",
   "admin/editor.location-availability.availability-header.title": "Availability Header",
+  "admin/editor.location-availability.availability-header.no-location": "Set your location to check availability",
   "admin/editor.location-availability.availability-header.description": "Header for PDP Availability section, showing shopper's current postal code",
   "admin/editor.location-availability.availability-header.styleAsLink": "If true, styles shopper's postal code as a clickable link",
   "store/location-availability.shipping-label": "Envío:",

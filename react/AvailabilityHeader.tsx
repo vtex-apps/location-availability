@@ -22,22 +22,26 @@ const AvailabilityHeader: StorefrontFunctionComponent<Props> = ({
         styleAsLink && `pointer`
       }`}
     >
-      <FormattedMessage
-        id="store/location-availability.availability-header"
-        values={{
-          postalCode: (
-            <span
-              className={
-                styleAsLink
-                  ? `${handles.availabilityHeaderLink} c-action-primary underline`
-                  : ''
-              }
-            >
-              {location.postalCode}
-            </span>
-          ),
-        }}
-      />
+      {!location.postalCode ? (
+        <FormattedMessage id="store/location-availability.availability-header.no-location" />
+      ) : (
+        <FormattedMessage
+          id="store/location-availability.availability-header"
+          values={{
+            postalCode: (
+              <span
+                className={
+                  styleAsLink
+                    ? `${handles.availabilityHeaderLink} c-action-primary underline`
+                    : ''
+                }
+              >
+                {location.postalCode}
+              </span>
+            ),
+          }}
+        />
+      )}
     </div>
   )
 }
