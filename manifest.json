@@ -1,7 +1,7 @@
 {
   "vendor": "vtex",
   "name": "location-availability",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "title": "Location Availability",
   "description": "Shows the availability based on the user's location",
   "builders": {
@@ -20,7 +20,9 @@
     "vtex.format-currency": "0.x",
     "vtex.styleguide": "9.x"
   },
-  "registries": ["smartcheckout"],
+  "registries": [
+    "smartcheckout"
+  ],
   "policies": [],
   "billingOptions": {
     "termsURL": "https://compliance.vtex.com/gdpr/policies/vtex-privacy-policy",
@@ -29,7 +31,9 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": ["*"]
+    "availableCountries": [
+      "*"
+    ]
   },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
