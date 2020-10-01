@@ -1,5 +1,18 @@
 {
   "product-location-availability": {
-    "component": "CheckAvailability"
+    "component": "AvailabilitySummary"
+  },
+  "product-location-availability-header": {
+    "component": "AvailabilityHeader"
+  },
+  "product-location-shipping-options": {
+    "component": "ShippingAvailability"
+  },
+  "product-location-pickup-options": {
+    "component": "PickupAvailability"
+  },
+  "location-context": {
+    "component": "LocationQuery",
+    "composition": "children"
   }
 }

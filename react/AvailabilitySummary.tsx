@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   injectIntl,
   FormattedMessage,
   WrappedComponentProps,
   defineMessages,
 } from 'react-intl'
-import { useLazyQuery, graphql, compose } from 'react-apollo'
-import useProduct from 'vtex.product-context/useProduct'
+import { useLazyQuery, useQuery } from 'react-apollo'
+import { useProduct } from 'vtex.product-context'
 import { useCssHandles } from 'vtex.css-handles'
 
 import SIMULATE from './queries/simulate.gql'
@@ -32,24 +32,34 @@ const CSS_HANDLES = [
 ] as const
 
 interface CheckAvailabilityProps {
-  orderForm: any
   maxItems: number
   orderBy: string
   pickupFirst: boolean
 }
 
-const CheckAvailability: StorefrontFunctionComponent<
+const AvailabilitySummary: StorefrontFunctionComponent<
   WrappedComponentProps & CheckAvailabilityProps
-> = ({ intl, orderForm, maxItems, orderBy, pickupFirst }: any) => {
+> = ({ intl, maxItems, orderBy, pickupFirst }: any) => {
   const [getSimulation, { data, loading }] = useLazyQuery(SIMULATE)
+  const { data: orderFormData, refetch } = useQuery(ORDERFORM, { ssr: false })
 
   const skuSelector = useProduct()
   const handles = useCssHandles(CSS_HANDLES)
 
-  if (!skuSelector || !orderForm) return null
+  useEffect(() => {
+    const handleLocationUpdated = () => refetch()
+
+    window.addEventListener('locationUpdated', handleLocationUpdated)
+
+    return () => {
+      window.removeEventListener('locationUpdated', handleLocationUpdated)
+    }
+  }, [refetch])
+
+  if (!skuSelector || !orderFormData) return null
 
   const { selectedItem, product } = skuSelector
-  const hasShipping = orderForm?.orderForm?.shippingData
+  const hasShipping = orderFormData?.orderForm?.shippingData
 
   const buildResponse = (item: any) => {
     const [status] = item.items
@@ -62,9 +72,9 @@ const CheckAvailability: StorefrontFunctionComponent<
       return (
         <p className={`${styles.cannotBeDelivered} ${handles.shippingOption}`}>
           <span className={`${styles.cannotBeDeliveredLabel}`}>
-            <FormattedMessage id="store/shipping-label" />
+            <FormattedMessage id="store/location-availability.shipping-label" />
           </span>{' '}
-          <FormattedMessage id="store/unavailable-message" />{' '}
+          <FormattedMessage id="store/location-availability.unavailable-message" />{' '}
           <span className={handles.postalCode}>
             {hasShipping.address.postalCode}
           </span>
@@ -132,28 +142,28 @@ const CheckAvailability: StorefrontFunctionComponent<
           {option.isPickup && (
             <span className={`${styles.pickUp}`}>
               <span className={`${styles.pickUpLabel}`}>
-                <FormattedMessage id="store/store-pickup-label" />
+                <FormattedMessage id="store/location-availability.store-pickup-label" />
               </span>{' '}
-              <FormattedMessage id="store/store-pickup-message" />{' '}
+              <FormattedMessage id="store/location-availability.store-pickup-message" />{' '}
               {option.storeName}{' '}
               <span className={handles.ETA}>
                 {option.days === 0 ? (
                   intl.formatMessage({
-                    id: 'store/today',
+                    id: 'store/location-availability.today',
                   })
                 ) : option.days === 1 ? (
                   intl.formatMessage({
-                    id: 'store/tomorrow',
+                    id: 'store/location-availability.tomorrow',
                   })
                 ) : (
                   <span className={handles.time}>
                     {intl.formatMessage({
-                      id: 'store/shipping-message-in',
+                      id: 'store/location-availability.shipping-message-in',
                     })}{' '}
                     <span className={handles.ETA}>
                       {option.days}{' '}
                       {intl.formatMessage({
-                        id: 'store/shipping-message-days',
+                        id: 'store/location-availability.shipping-message-days',
                       })}
                     </span>
                   </span>
@@ -164,24 +174,24 @@ const CheckAvailability: StorefrontFunctionComponent<
           {!option.isPickup && !option.price && (
             <span className={`${styles.freeShipping}`}>
               <span className={styles.freeShippingLabel}>
-                <FormattedMessage id="store/free-shipping-label" />
+                <FormattedMessage id="store/location-availability.free-shipping-label" />
               </span>{' '}
-              <FormattedMessage id="store/shipping-message" />{' '}
+              <FormattedMessage id="store/location-availability.shipping-message" />{' '}
               {option.days === 1 ? (
                 <span className={handles.ETA}>
                   {intl.formatMessage({
-                    id: 'store/tomorrow',
+                    id: 'store/location-availability.tomorrow',
                   })}
                 </span>
               ) : (
                 <span className={handles.time}>
                   {intl.formatMessage({
-                    id: 'store/shipping-message-in',
+                    id: 'store/location-availability.shipping-message-in',
                   })}{' '}
                   <span className={handles.ETA}>
                     {option.days}{' '}
                     {intl.formatMessage({
-                      id: 'store/shipping-message-days',
+                      id: 'store/location-availability.shipping-message-days',
                     })}
                   </span>
                 </span>
@@ -197,24 +207,24 @@ const CheckAvailability: StorefrontFunctionComponent<
               }`}
             >
               <span className={styles.regularShippingLabel}>
-                <FormattedMessage id="store/shipping-label" />
+                <FormattedMessage id="store/location-availability.shipping-label" />
               </span>{' '}
-              <FormattedMessage id="store/shipping-message" />{' '}
+              <FormattedMessage id="store/location-availability.shipping-message" />{' '}
               {option.days === 1 ? (
                 <span className={handles.ETA}>
                   {intl.formatMessage({
-                    id: 'store/tomorrow',
+                    id: 'store/location-availability.tomorrow',
                   })}
                 </span>
               ) : (
                 <span className={handles.time}>
                   {intl.formatMessage({
-                    id: 'store/shipping-message-in',
+                    id: 'store/location-availability.shipping-message-in',
                   })}{' '}
                   <span className={handles.ETA}>
                     {option.days}{' '}
                     {intl.formatMessage({
-                      id: 'store/shipping-message-days',
+                      id: 'store/location-availability.shipping-message-days',
                     })}
                   </span>
                 </span>
@@ -235,10 +245,11 @@ const CheckAvailability: StorefrontFunctionComponent<
       !!hasShipping?.address?.postalCode &&
       // eslint-disable-next-line no-restricted-globals
       !isNaN(hasShipping.address.postalCode) &&
-      (!prev[product.prodictId] ||
-        prev[product.prodictId] !== selectedItem.itemId)
+      product &&
+      (!prev[product.productId] ||
+        prev[product.productId] !== selectedItem.itemId)
     ) {
-      prev[product.prodictId] = selectedItem.itemId
+      prev[product.productId] = selectedItem.itemId
       getSimulation({
         variables: {
           items: [
@@ -255,11 +266,6 @@ const CheckAvailability: StorefrontFunctionComponent<
     }
   }
 
-  // Listen to address changes from the app vtex.shopper-location
-  window.addEventListener('locationUpdated', () => {
-    orderForm.refetch()
-  })
-
   return data?.shipping?.items && !loading ? (
     <div className={handles.container}> {buildResponse(data.shipping)}</div>
   ) : null
@@ -268,35 +274,42 @@ const CheckAvailability: StorefrontFunctionComponent<
 const messages = defineMessages({
   title: {
     defaultMessage: '',
-    id: 'admin/editor.product-location-availability.title',
+    id:
+      'admin/editor.location-availability.product-location-availability.title',
   },
   description: {
     defaultMessage: '',
-    id: 'admin/editor.product-location-availability.description',
+    id:
+      'admin/editor.location-availability.product-location-availability.description',
   },
   maxItems: {
     defaultMessage: '',
-    id: 'admin/editor.product-location-availability.maxItems.title',
+    id:
+      'admin/editor.location-availability.product-location-availability.maxItems.title',
   },
   orderBy: {
     defaultMessage: '',
-    id: 'admin/editor.product-location-availability.orderBy.title',
+    id:
+      'admin/editor.location-availability.product-location-availability.orderBy.title',
   },
   pickupFirst: {
     defaultMessage: '',
-    id: 'admin/editor.product-location-availability.pickupFirst.title',
+    id:
+      'admin/editor.location-availability.product-location-availability.pickupFirst.title',
   },
   faster: {
     defaultMessage: '',
-    id: 'admin/editor.product-location-availability.orderBy.faster',
+    id:
+      'admin/editor.location-availability.product-location-availability.orderBy.faster',
   },
   cheaper: {
     defaultMessage: '',
-    id: 'admin/editor.product-location-availability.orderBy.cheaper',
+    id:
+      'admin/editor.location-availability.product-location-availability.orderBy.cheaper',
   },
 })
 
-CheckAvailability.schema = {
+AvailabilitySummary.schema = {
   title: messages.title,
   description: messages.description,
   type: 'object',
@@ -324,19 +337,10 @@ CheckAvailability.schema = {
   },
 }
 
-CheckAvailability.defaultProps = {
+AvailabilitySummary.defaultProps = {
   maxItems: DEFAULT.MAX_ITEMS,
   orderBy: DEFAULT.ORDER_BY,
   pickupFirst: DEFAULT.PICKUP_FIRST,
 }
 
-export default injectIntl(
-  compose(
-    graphql(ORDERFORM, {
-      name: 'orderForm',
-      options: {
-        ssr: false,
-      },
-    })
-  )(CheckAvailability)
-)
+export default injectIntl(AvailabilitySummary)
