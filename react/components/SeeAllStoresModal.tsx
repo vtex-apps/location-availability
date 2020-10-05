@@ -11,7 +11,6 @@ const CSS_HANDLES = [
   'seeAllModalButtonText',
   'modalContainer',
   'modalHeader',
-  'modalCloseIcon',
   'modalStoreList',
 ] as const
 
