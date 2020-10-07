@@ -87,7 +87,7 @@ const LocationQueryInner: FunctionComponent = ({ children }) => {
   }, [refetch])
 
   useEffect(() => {
-    if (!data?.orderForm?.shippingData) return
+    if (!data?.orderForm?.shippingData?.address) return
     const {
       postalCode = '',
       country = '',
