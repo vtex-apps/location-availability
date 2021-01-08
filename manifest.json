@@ -1,7 +1,7 @@
 {
   "vendor": "vtex",
   "name": "location-availability",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "title": "Location Availability",
   "description": "Shows the availability based on the user's location",
   "builders": {
