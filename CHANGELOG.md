@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Check if `postalCode` has asterix(`*`) instead of `isNaN`
+
 ## [0.2.3] - 2020-10-07
 
 ### Fixed
