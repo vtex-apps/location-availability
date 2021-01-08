@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
 import React, { useEffect } from 'react'
 import {
   injectIntl,
@@ -244,7 +243,7 @@ const AvailabilitySummary: StorefrontFunctionComponent<
     if (
       !!hasShipping?.address?.postalCode &&
       // eslint-disable-next-line no-restricted-globals
-      !isNaN(hasShipping.address.postalCode) &&
+      hasShipping.address.postalCode.indexOf('*') === -1 &&
       product &&
       (!prev[product.productId] ||
         prev[product.productId] !== selectedItem.itemId)
