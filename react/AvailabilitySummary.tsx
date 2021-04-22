@@ -52,7 +52,7 @@ const AvailabilitySummary: StorefrontFunctionComponent<
 
     return () => {
       if (Object.keys(prev).length !== 0) {
-        Object.keys(prev).forEach(function(key) {
+        Object.keys(prev).forEach(function (key) {
           delete prev[key]
         })
       }
