@@ -51,6 +51,11 @@ const AvailabilitySummary: StorefrontFunctionComponent<
     window.addEventListener('locationUpdated', handleLocationUpdated)
 
     return () => {
+      if (Object.keys(prev).length !== 0) {
+        Object.keys(prev).forEach(function (key) {
+          delete prev[key]
+        })
+      }
       window.removeEventListener('locationUpdated', handleLocationUpdated)
     }
   }, [refetch])
