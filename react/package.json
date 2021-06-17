@@ -1,6 +1,6 @@
 {
   "name": "location-availability",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "scripts": {
     "test": "vtex-test-tools test"
   },
