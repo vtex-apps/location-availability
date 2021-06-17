@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Not able to simulate when only geo coordinates are available
+
 ## [0.2.5] - 2021-04-22
 
 ### Fixed

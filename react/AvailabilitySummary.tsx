@@ -52,10 +52,11 @@ const AvailabilitySummary: StorefrontFunctionComponent<
 
     return () => {
       if (Object.keys(prev).length !== 0) {
-        Object.keys(prev).forEach(function (key) {
+        Object.keys(prev).forEach((key) => {
           delete prev[key]
         })
       }
+
       window.removeEventListener('locationUpdated', handleLocationUpdated)
     }
   }, [refetch])
@@ -246,7 +247,8 @@ const AvailabilitySummary: StorefrontFunctionComponent<
     const [seller] = selectedItem.sellers
 
     if (
-      !!hasShipping?.address?.postalCode &&
+      (!!hasShipping?.address?.postalCode ||
+        !!hasShipping?.address?.geoCoordinates) &&
       // eslint-disable-next-line no-restricted-globals
       hasShipping.address.postalCode.indexOf('*') === -1 &&
       product &&
@@ -254,6 +256,7 @@ const AvailabilitySummary: StorefrontFunctionComponent<
         prev[product.productId] !== selectedItem.itemId)
     ) {
       prev[product.productId] = selectedItem.itemId
+
       getSimulation({
         variables: {
           items: [
@@ -263,6 +266,7 @@ const AvailabilitySummary: StorefrontFunctionComponent<
               quantity: '1',
             },
           ],
+          geoCoordinates: hasShipping.address.geoCoordinates,
           postalCode: hasShipping.address.postalCode,
           country: hasShipping.address.country,
         },

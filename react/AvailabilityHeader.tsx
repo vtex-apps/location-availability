@@ -22,7 +22,7 @@ const AvailabilityHeader: StorefrontFunctionComponent<Props> = ({
         styleAsLink && `pointer`
       }`}
     >
-      {!location.postalCode ? (
+      {!location.postalCode && !location.lat && !location.long ? (
         <FormattedMessage id="store/location-availability.availability-header.no-location" />
       ) : (
         <FormattedMessage
