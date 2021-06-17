@@ -20,7 +20,10 @@ const ShippingQuery: FunctionComponent = ({ children }) => {
 
   const { selectedItem = null } = skuSelector as Partial<ProductContextState>
 
-  const validVars = location?.postalCode && location?.country && selectedItem
+  const validVars =
+    (location?.postalCode || (location?.lat && location?.long)) &&
+    location?.country &&
+    selectedItem
 
   const { data, loading, refetch } = useQuery(SIMULATE, {
     ssr: false,
@@ -34,6 +37,10 @@ const ShippingQuery: FunctionComponent = ({ children }) => {
         },
       ],
       postalCode: location?.postalCode,
+      geoCoordinates:
+        !!location.long && !!location.lat
+          ? [location.long, location.lat]
+          : null,
       country: location?.country,
     },
   })
@@ -94,7 +101,7 @@ const LocationQueryInner: FunctionComponent = ({ children }) => {
       geoCoordinates = [],
     } = data.orderForm.shippingData.address
 
-    if (!postalCode || !country || geoCoordinates.length !== 2) return
+    if (!country || (!postalCode && geoCoordinates.length !== 2)) return
 
     dispatch({
       type: 'SET_LOCATION',

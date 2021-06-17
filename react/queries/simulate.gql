@@ -1,9 +1,15 @@
 query getSimulaltion(
   $items: [ShippingItem]
   $postalCode: String
+  $geoCoordinates: [String]
   $country: String
 ) @context(provider: "vtex.store-graphql") {
-  shipping(items: $items, postalCode: $postalCode, country: $country) {
+  shipping(
+    items: $items
+    postalCode: $postalCode
+    geoCoordinates: $geoCoordinates
+    country: $country
+  ) {
     items {
       availability
     }
